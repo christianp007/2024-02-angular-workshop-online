@@ -12,13 +12,3 @@ import { DashboardComponent } from "./books/dashboard/dashboard.component";
 export class AppComponent {
   title = 'Book Rating';
 }
-
-
-/*
-TODO
-- Komponente(n)
-- Datenmodell
-- Datenquelle => Daten
-- Anzeige
-
-*/
