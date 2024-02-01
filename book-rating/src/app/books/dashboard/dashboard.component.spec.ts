@@ -8,12 +8,14 @@ describe('DashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [DashboardComponent]
+      imports: [DashboardComponent],
+      providers: []
     })
     .compileComponents();
-    
+
     fixture = TestBed.createComponent(DashboardComponent);
     component = fixture.componentInstance;
+    // DOM-Element fixture.nativeElement.querySelector('p')
     fixture.detectChanges();
   });
 
