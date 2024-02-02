@@ -3,6 +3,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { DashboardComponent } from './dashboard.component';
 import { Book } from '../shared/book';
 import { BookRatingService } from '../shared/book-rating.service';
+import { BookStoreService } from '../shared/book-store.service';
+import { of } from 'rxjs';
 
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
@@ -20,7 +22,13 @@ describe('DashboardComponent', () => {
       providers: [
         // Service ersetzen:
         // Wenn jemand BRS anfordert, wird stattdessen ratingMock ausgeliefert
-        { provide: BookRatingService, useValue: ratingMock }
+        { provide: BookRatingService, useValue: ratingMock },
+        {
+          provide: BookStoreService,
+          useValue: {
+            getAll: () => of([])
+          }
+        }
       ]
     })
     .compileComponents();
