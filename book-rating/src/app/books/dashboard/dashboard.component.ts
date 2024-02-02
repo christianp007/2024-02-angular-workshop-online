@@ -37,6 +37,7 @@ export class DashboardComponent {
 
   doRateUp(book: Book) {
     const ratedBook = this.rs.rateUp(book);
+    console.log({ ratedBook });
     this.updateList(ratedBook);
   }
 
