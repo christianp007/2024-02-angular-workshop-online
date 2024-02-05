@@ -31,7 +31,9 @@ export class BookStoreService {
     return this.http.get<Book[]>(this.apiUrl + '/books/search/' + term);
   }
 
-  // delete // Hausaufgabe
+  delete(isbn: string): Observable<unknown> {
+    return this.http.delete(this.apiUrl + '/books/' + isbn);
+  }
 
   // updateRating(isbn: string, rating: number) {}
 
