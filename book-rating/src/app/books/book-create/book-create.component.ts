@@ -1,6 +1,6 @@
 import { JsonPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-book-create',
@@ -40,6 +40,28 @@ export class BookCreateComponent {
         Validators.min(1),
         Validators.max(5),
       ]
-    }),
+    })
   });
+
+  isInvalid(controlName: string): boolean {
+    // const control = this.bookForm.controls[controlName];
+    const control = this.bookForm.get(controlName);
+
+    if (!control) {
+      return false;
+    }
+
+    return control.touched && control.invalid;
+  }
+
+  hasError(controlName: string, errorCode: string): boolean {
+    // "Hat Control X den Fehler Y?"
+    const control = this.bookForm.get(controlName);
+
+    if (!control) {
+      return false;
+    }
+
+    return control.hasError(errorCode) && control.touched;
+  }
 }
