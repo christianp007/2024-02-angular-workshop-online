@@ -64,4 +64,8 @@ export class BookCreateComponent {
 
     return control.hasError(errorCode) && control.touched;
   }
+
+  submitForm() {
+    // TODO
+  }
 }
