@@ -55,7 +55,8 @@ describe('DashboardComponent', () => {
 
     // spyOn(rs, 'rateUp').and.returnValue(testBook);
     // spyOn(rs, 'rateUp').and.callFake(b => b);
-    // Methode überwachen, aber Originalmethode trotzdem aufrufen
+    // Methode überwachen, aber "Original"methode trotzdem aufrufen
+    // "Original" heißt in diesem Fall "ratingMock"
     spyOn(rs, 'rateUp').and.callThrough();
 
 

@@ -10,7 +10,7 @@ import { HttpErrorResponse } from '@angular/common/http';
   standalone: true,
   imports: [BookComponent],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.scss'
+  styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   books: Book[] = [];
