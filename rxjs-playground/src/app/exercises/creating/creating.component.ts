@@ -1,5 +1,5 @@
-import { Component } from '@angular/core';
-import { Observable, of, from, timer, interval, ReplaySubject, map, filter } from 'rxjs';
+import { Component, EventEmitter } from '@angular/core';
+import { Observable, of, from, timer, interval, ReplaySubject, map, filter, Subscribable, Subscriber, Observer } from 'rxjs';
 import { HistoryComponent } from '../../shared/history/history.component';
 
 @Component({
@@ -24,7 +24,29 @@ export class CreatingComponent {
 
     /******************************/
 
-    
+    function producer(sub: Subscriber<number>) {
+      const result = Math.random();
+      sub.next(result);
+      sub.next(10);
+
+      setTimeout(() => sub.next(20), 2000)
+      setTimeout(() => sub.next(30), 3000)
+      setTimeout(() => sub.complete(), 4000)
+    }
+
+    const obs: Observer<number> = {
+      next: (data: number) => console.log(data),
+      error: (error: any) => console.error(error),
+      complete: () => console.log('Fertig'),
+    }
+
+    // producer(obs);
+
+    // Finnische Notation $
+    const myObs$ = new Observable(producer);
+    myObs$.subscribe(obs);
+
+
     /******************************/
   }
 
