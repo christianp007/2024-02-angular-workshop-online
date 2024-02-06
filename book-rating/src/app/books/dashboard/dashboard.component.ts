@@ -4,16 +4,20 @@ import { BookComponent } from '../book/book.component';
 import { BookRatingService } from '../shared/book-rating.service';
 import { BookStoreService } from '../shared/book-store.service';
 import { HttpErrorResponse } from '@angular/common/http';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [BookComponent],
+  imports: [BookComponent, DatePipe],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
   books: Book[] = [];
+
+  d = Date.now();
+  private intervalId: ReturnType<typeof setInterval>; // "unknown" würde hier auch reichen ;-)
 
   // private rs2 = inject(BookRatingService);
 
@@ -21,6 +25,11 @@ export class DashboardComponent {
     this.bs.getAll().subscribe(books => {
       this.books = books;
     });
+
+    this.intervalId = setInterval(() => {
+      this.d = Date.now();
+      console.log(this.d);
+    }, 1000);
   }
 
   doRateUp(book: Book) {
@@ -54,5 +63,9 @@ export class DashboardComponent {
     })
 
     // this.books = this.books.map(b => b.isbn === ratedBook.isbn ? ratedBook : b);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.intervalId);
   }
 }
