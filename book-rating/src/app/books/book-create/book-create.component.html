@@ -1,3 +1,7 @@
+@if (errorMessage()) {
+  <div class="alert alert-danger mb-3">{{ errorMessage() }}</div>
+}
+
 <form [formGroup]="bookForm" (ngSubmit)="submitForm()">
   <div class="form-group">
     <label for="isbnInput">ISBN</label>
@@ -9,6 +13,7 @@
     @if (hasError('isbn', 'maxlength')) {<div class="feedback-error">Die ISBN ist zu lang.</div>}
     @if (hasError('isbn', 'required')) {<div class="feedback-error">Die ISBN muss angegeben werden.</div>}
     @if (hasError('isbn', 'pattern')) {<div class="feedback-error">Die ISBN hat das falsche Format.</div>}
+    @if (hasError('isbn', 'servererror')) {<div class="feedback-error">Die ISBN ist kaputt, sagt der Server.</div>}
 
     <!-- Inspiration für Fehlerbehandlung
     <app-form-errors controlName="isbn" [messages]="{ minlength: 'Die ISBN ist zu kurz.' }"></app-form-errors>

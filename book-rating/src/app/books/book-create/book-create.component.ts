@@ -1,5 +1,5 @@
 import { JsonPipe } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Book } from '../shared/book';
 import { BookStoreService } from '../shared/book-store.service';
@@ -16,6 +16,8 @@ export class BookCreateComponent {
 
   private bs = inject(BookStoreService);
   private router = inject(Router);
+
+  errorMessage = signal('');
 
   bookForm = new FormGroup({
     isbn: new FormControl('', {
@@ -82,6 +84,17 @@ export class BookCreateComponent {
       },
       error: err => {
         // TODO Fehler behandeln
+        // Ansatz: eigene Fehler auf dem Control setzen
+        this.bookForm.controls.isbn.setErrors({
+          servererror: true,
+          minlength: true
+        });
+
+        // generische Fehlermeldung
+        this.errorMessage.set('Server hat Fehler gemeldet!');
+        setTimeout(() => {
+          this.errorMessage.set('');
+        }, 3000)
       }
     });
   }
