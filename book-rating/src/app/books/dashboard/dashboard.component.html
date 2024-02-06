@@ -1,4 +1,4 @@
-@for (b of books; track b.isbn) {
+@for (b of books(); track b.isbn) {
   <app-book
     [book]="b"
     [minRating]="1"
@@ -9,4 +9,4 @@
 }
 
 <p>Anzahl Bücher: {{ books.length }}</p>
-<p>{{ d | date:'medium' }} Uhr</p>
+<p>{{ d() | date:'medium' }} Uhr</p>

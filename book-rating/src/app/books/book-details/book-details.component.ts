@@ -15,8 +15,7 @@ export class BookDetailsComponent {
   private route = inject(ActivatedRoute);
   private bs = inject(BookStoreService);
 
-  book?: Book;
-  // protected bookX = signal<Book | undefined>(undefined);
+  protected book = signal<Book | undefined>(undefined);
 
   constructor() {
     // PULL
@@ -27,8 +26,7 @@ export class BookDetailsComponent {
     this.route.paramMap.subscribe(params => {
       const isbn = params.get('isbn')!; // Non-Null Assertion (Ausnahme!)
       this.bs.getSingle(isbn).subscribe(book => {
-        this.book = book;
-        // this.bookX.set(book);
+        this.book.set(book);
       });
     });
   }

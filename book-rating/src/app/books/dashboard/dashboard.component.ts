@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { Book } from '../shared/book';
 import { BookComponent } from '../book/book.component';
 import { BookRatingService } from '../shared/book-rating.service';
@@ -14,21 +14,21 @@ import { DatePipe } from '@angular/common';
   styleUrl: './dashboard.component.scss',
 })
 export class DashboardComponent {
-  books: Book[] = [];
+  books = signal<Book[]>([]);
 
-  d = Date.now();
+  d = signal(Date.now());
   private intervalId: ReturnType<typeof setInterval>; // "unknown" würde hier auch reichen ;-)
 
   // private rs2 = inject(BookRatingService);
 
   constructor(private rs: BookRatingService, private bs: BookStoreService) {
     this.bs.getAll().subscribe(books => {
-      this.books = books;
+      this.books.set(books);
     });
 
     this.intervalId = setInterval(() => {
-      this.d = Date.now();
-      console.log(this.d);
+      this.d.set(Date.now());
+      console.log(this.d());
     }, 1000);
   }
 
@@ -45,7 +45,7 @@ export class DashboardComponent {
   doDelete(book: Book) {
     this.bs.delete(book.isbn).subscribe(() => {
       this.bs.getAll().subscribe(books => {
-        this.books = books;
+        this.books.set(books);
       })
     })
   }
@@ -54,7 +54,7 @@ export class DashboardComponent {
     // [1,2,3,4,5].map(e => e * 10); // [10, 20, 30, 40, 50]
     // [1,2,3,4,5,6,7,8,9].filter(e => e > 5) // [6,7,8,9]
 
-    this.books = this.books.map(b => {
+    const result  = this.books().map(b => {
       if (b.isbn === ratedBook.isbn) {
         return ratedBook;
       } else {
@@ -62,6 +62,7 @@ export class DashboardComponent {
       }
     })
 
+    this.books.set(result);
     // this.books = this.books.map(b => b.isbn === ratedBook.isbn ? ratedBook : b);
   }
 

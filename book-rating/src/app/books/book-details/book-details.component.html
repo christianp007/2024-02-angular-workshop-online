@@ -1,13 +1,8 @@
-@if (book) {
+
+@if (book(); as book) {
   <h2>{{ book.title }}</h2>
   <p>{{ book.description }}</p>
 }
-<!-- mit Signals
-@if (bookX(); as book) {
-  <h2>{{ book.title }}</h2>
-  <p>{{ book.description }}</p>
-}
--->
 
 <hr>
 
