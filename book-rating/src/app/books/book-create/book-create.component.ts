@@ -75,9 +75,14 @@ export class BookCreateComponent {
   submitForm() {
     const newBook: Book = this.bookForm.getRawValue();
 
-    this.bs.create(newBook).subscribe(receivedBook => {
-      console.log('CREATED book', receivedBook);
-      this.router.navigate(['/books', receivedBook.isbn]);
+    this.bs.create(newBook).subscribe({
+      next: receivedBook => {
+        console.log('CREATED book', receivedBook);
+        this.router.navigate(['/books', receivedBook.isbn]);
+      },
+      error: err => {
+        // TODO Fehler behandeln
+      }
     });
   }
 }
