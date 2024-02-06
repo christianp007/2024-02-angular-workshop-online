@@ -1,5 +1,5 @@
 import { Component, EventEmitter } from '@angular/core';
-import { Observable, of, from, timer, interval, ReplaySubject, map, filter, Subscribable, Subscriber, Observer } from 'rxjs';
+import { Observable, of, from, timer, interval, ReplaySubject, Subscribable, Subscriber, Observer, map, filter } from 'rxjs';
 import { HistoryComponent } from '../../shared/history/history.component';
 
 @Component({
@@ -32,7 +32,10 @@ export class CreatingComponent {
     // timer(3000, 1000) // ---------0---1---2---3---4---5 ...
     // timer(0, 1000)    // 0---1---2---3---4---5 ...
 
-    timer(0, 1000).subscribe({
+    timer(0, 1000).pipe(
+      map(e => e * 3),
+      filter(e => e % 2 === 0)
+    ).subscribe({
       next: e => this.log(e),
       complete: () => this.log('COMPLETE')
     })
