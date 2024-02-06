@@ -24,6 +24,24 @@ export class CreatingComponent {
 
     /******************************/
 
+    // of('Leipzig', 'Köln', 'Hamburg', 'München')
+    // of(1,2,3,4,5)
+    // from([1,2,3,4,5])
+    // interval(1000)    // ---0---1---2---3---4---5 ...
+    // timer(3000)       // ---------0|
+    // timer(3000, 1000) // ---------0---1---2---3---4---5 ...
+    // timer(0, 1000)    // 0---1---2---3---4---5 ...
+
+    timer(0, 1000).subscribe({
+      next: e => this.log(e),
+      complete: () => this.log('COMPLETE')
+    })
+
+
+    /******************************/
+
+    // Producer: generiert die Werte
+    // Subscriber ist der von außen übergebene Observer
     function producer(sub: Subscriber<number>) {
       const result = Math.random();
       sub.next(result);
@@ -34,6 +52,7 @@ export class CreatingComponent {
       setTimeout(() => sub.complete(), 4000)
     }
 
+    // Observer: konsumiert die Werte
     const obs: Observer<number> = {
       next: (data: number) => console.log(data),
       error: (error: any) => console.error(error),
@@ -42,9 +61,23 @@ export class CreatingComponent {
 
     // producer(obs);
 
+    // Observable: verwendet den Producer, um Werte an Observer auszuspielen
     // Finnische Notation $
     const myObs$ = new Observable(producer);
-    myObs$.subscribe(obs);
+    // myObs$.subscribe(obs);
+
+    /*
+    class MyObservable {
+      constructor(private producer: any) {}
+
+      subscribe(obs: Partial<Observer<any>>) {
+        if (!obs.error) {
+          obs.error = () => {};
+        }
+
+        this.producer(obs);
+      }
+    }*/
 
 
     /******************************/
