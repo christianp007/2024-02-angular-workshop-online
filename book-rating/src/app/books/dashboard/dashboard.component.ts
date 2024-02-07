@@ -5,6 +5,10 @@ import { BookRatingService } from '../shared/book-rating.service';
 import { BookStoreService } from '../shared/book-store.service';
 import { HttpErrorResponse } from '@angular/common/http';
 import { DatePipe } from '@angular/common';
+import { Store } from '@ngrx/store';
+import { BookActions } from '../store/book.actions';
+import { map } from 'rxjs';
+import { selectBooks, selectLoading } from '../store/book.selectors';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,11 +24,21 @@ export class DashboardComponent {
   private intervalId: ReturnType<typeof setInterval>; // "unknown" würde hier auch reichen ;-)
 
   // private rs2 = inject(BookRatingService);
+  // private store2 = inject(Store);
 
-  constructor(private rs: BookRatingService, private bs: BookStoreService) {
-    this.bs.getAll().subscribe(books => {
+  loading$ = this.store.select(selectLoading);
+
+  constructor(private rs: BookRatingService, private bs: BookStoreService, private store: Store) {
+    this.store.dispatch(BookActions.loadBooks());
+
+    // bitte lieber mit der AsyncPipe lösen!
+    this.store.select(selectBooks).subscribe(books => {
       this.books = books;
     });
+
+    /*this.bs.getAll().subscribe(books => {
+      this.books = books;
+    });*/
 
     this.intervalId = setInterval(() => {
       this.d = Date.now();
