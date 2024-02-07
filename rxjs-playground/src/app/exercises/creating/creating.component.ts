@@ -23,8 +23,8 @@ export class CreatingComponent {
      */
 
     /******************************/
-
-    // of('Leipzig', 'Köln', 'Hamburg', 'München')
+    // Creation Function
+    // of('Leipzig', 'Köln', 'Hamburg', 'München') ABCD|
     // of(1,2,3,4,5)
     // from([1,2,3,4,5])
     // interval(1000)    // ---0---1---2---3---4---5 ...
@@ -82,7 +82,15 @@ export class CreatingComponent {
       console.log('UNSUBSCRIBE');
     }, 5200)
 
-    /*
+
+/*
+    const myObs2$ = new Observable(sub => {
+      sub.next(1);
+
+      return () => {};
+    })*/
+
+/*
     class MyObservable {
       constructor(private producer: any) {}
 
@@ -91,7 +99,13 @@ export class CreatingComponent {
           obs.error = () => {};
         }
 
-        this.producer(obs);
+        const teardownLogic = this.producer(obs);
+
+        return {
+          unsubscribe: () => {
+            teardownLogic();
+          }
+        }
       }
     }*/
 
