@@ -50,9 +50,17 @@ export class CreatingComponent {
       sub.next(result);
       sub.next(10);
 
-      setTimeout(() => sub.next(20), 2000)
-      setTimeout(() => sub.next(30), 3000)
-      setTimeout(() => sub.complete(), 4000)
+      const interval = setInterval(() => {
+        const result = Math.random();
+        sub.next(result);
+        console.log({ result })
+      }, 1000);
+
+      // Teardown Logic
+      return () => {
+        clearInterval(interval);
+        console.log('TEARDOWN');
+      };
     }
 
     // Observer: konsumiert die Werte
@@ -67,7 +75,12 @@ export class CreatingComponent {
     // Observable: verwendet den Producer, um Werte an Observer auszuspielen
     // Finnische Notation $
     const myObs$ = new Observable(producer);
-    // myObs$.subscribe(obs);
+    const sub = myObs$.subscribe(obs);
+
+    setTimeout(() => {
+      sub.unsubscribe();
+      console.log('UNSUBSCRIBE');
+    }, 5200)
 
     /*
     class MyObservable {
