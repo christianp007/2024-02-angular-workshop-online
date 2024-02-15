@@ -24,7 +24,27 @@ export class CreatingComponent {
 
     /******************************/
 
-    
+    //of('Leipzig', 'Köln', 'Hamburg','München').subscribe({
+    /*from(['Leipzig', 'Köln', 'Hamburg','München']).subscribe({
+      next: e => map(ethis.log(e),
+      complete: () => this.log('COMPLETE')
+    });*/
+
+    /*timer(3000, 1000).subscribe({
+      next: e => this.log(e),
+      complete: () => this.log('COMPLETE')
+    })*/
+
+    timer(0, 1000).pipe(
+        map(e => e*3),
+        filter(e => e%2==0)
+      ).subscribe({
+      next: e => this.log(e),
+      complete: () => this.log('COMPLETE')
+    })
+
+    const myObs2$ = new Observable();
+
     /******************************/
   }
 
