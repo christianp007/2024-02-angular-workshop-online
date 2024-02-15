@@ -1,21 +1,30 @@
-import { Component, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { ActivatedRoute, RouterLink } from '@angular/router';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BookStoreService } from '../shared/book-store.service';
 import { Book } from '../shared/book';
 import { Title } from '@angular/platform-browser';
+import { Observable, map, switchMap } from 'rxjs';
+import { AsyncPipe, JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-book-details',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, AsyncPipe, JsonPipe],
   templateUrl: './book-details.component.html',
-  styleUrl: './book-details.component.scss'
+  styleUrl: './book-details.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class BookDetailsComponent {
   private route = inject(ActivatedRoute);
   private bs = inject(BookStoreService);
 
-  book?: Book;
+  book$: Observable<Book>;
+
+  /*bookX = toSignal(this.route.paramMap.pipe(
+    map(params => params.get('isbn')!),
+    switchMap(isbn => this.bs.getSingle(isbn))
+  ));*/
   // protected bookX = signal<Book | undefined>(undefined);
 
   constructor() {
@@ -23,14 +32,11 @@ export class BookDetailsComponent {
     // const isbn = this.route.snapshot.paramMap.get('isbn'); // path: 'books/:isbn'
 
     // PUSH
-    // TODO: Verschachtelte Subscriptions vermeiden!
-    this.route.paramMap.subscribe(params => {
-      const isbn = params.get('isbn')!; // Non-Null Assertion (Ausnahme!)
-      this.bs.getSingle(isbn).subscribe(book => {
-        this.book = book;
-        // this.bookX.set(book);
-      });
-    });
+    this.book$ = this.route.paramMap.pipe(
+      map(params => params.get('isbn')!),
+      switchMap(isbn => this.bs.getSingle(isbn))
+    );
+
   }
 }
 

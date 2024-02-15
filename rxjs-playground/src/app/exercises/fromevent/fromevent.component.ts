@@ -21,14 +21,15 @@ export class FromeventComponent {
     /******************************/
 
     const result$ = fromEvent<{ target: Window }>(window, 'resize').pipe(
-      debounceTime(500), // rate-limiting; sollte als erstes stehen!
+      debounceTime(1000),
       map(e => e.target.innerWidth),
-      startWith(window.innerWidth)
+      startWith(window.innerWidth),
     );
+
+    ////////
 
     result$.subscribe(width => {
       this.currentWidth = width;
-      //console.log(width);
     })
 
     /******************************/

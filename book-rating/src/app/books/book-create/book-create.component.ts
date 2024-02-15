@@ -1,6 +1,9 @@
 import { JsonPipe } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Book } from '../shared/book';
+import { BookStoreService } from '../shared/book-store.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-book-create',
@@ -10,6 +13,12 @@ import { FormArray, FormControl, FormGroup, ReactiveFormsModule, Validators } fr
   styleUrl: './book-create.component.scss'
 })
 export class BookCreateComponent {
+
+  private bs = inject(BookStoreService);
+  private router = inject(Router);
+
+  errorMessage = signal('');
+
   bookForm = new FormGroup({
     isbn: new FormControl('', {
       nonNullable: true,
@@ -66,6 +75,27 @@ export class BookCreateComponent {
   }
 
   submitForm() {
-    // TODO
+    const newBook: Book = this.bookForm.getRawValue();
+
+    this.bs.create(newBook).subscribe({
+      next: receivedBook => {
+        console.log('CREATED book', receivedBook);
+        this.router.navigate(['/books', receivedBook.isbn]);
+      },
+      error: err => {
+        // TODO Fehler behandeln
+        // Ansatz: eigene Fehler auf dem Control setzen
+        this.bookForm.controls.isbn.setErrors({
+          servererror: true,
+          minlength: true
+        });
+
+        // generische Fehlermeldung
+        this.errorMessage.set('Server hat Fehler gemeldet!');
+        setTimeout(() => {
+          this.errorMessage.set('');
+        }, 3000)
+      }
+    });
   }
 }

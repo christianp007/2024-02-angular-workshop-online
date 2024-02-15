@@ -1,5 +1,5 @@
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { fromEvent } from 'rxjs';
+import { concatMap, fromEvent, takeUntil } from 'rxjs';
 
 @Component({
   templateUrl: './dragdrop.component.html',
@@ -10,7 +10,6 @@ export class DragdropComponent implements OnInit {
 
   @ViewChild('target', { static: true }) target!: ElementRef<HTMLElement>;
   targetPosition = [100, 80];
-  dragDropEnabled = false;
 
   ngOnInit() {
     const mouseMove$ = fromEvent<MouseEvent>(document, 'mousemove');
@@ -29,23 +28,10 @@ export class DragdropComponent implements OnInit {
 
     /******************************/
 
-    // rote Box klebt am Mauszeiger:
-    mouseMove$.subscribe(e => {
-      if (this.dragDropEnabled){
-        this.setTargetPosition(e);
-      }
-    });
-    mouseUp$.subscribe(e => {
-      if (e.button===0){
-        this.dragDropEnabled=false;
-      }
-    });
-    mouseDown$.subscribe(e => 
-    {
-      if (e.button===0){
-        this.dragDropEnabled=true;
-      }
-    });
+    mouseDown$.pipe(
+      concatMap(() => mouseMove$.pipe(takeUntil(mouseUp$)))
+    ).subscribe(e => this.setTargetPosition(e));
+
 
     /******************************/
   }

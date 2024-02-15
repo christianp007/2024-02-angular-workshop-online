@@ -1,1 +1,21 @@
-<p>book-search works!</p>
+<div class="form-group">
+  <input type="text" class="form-control" [formControl]="searchControl">
+</div>
+
+@if (loading()) {
+  <div>Wird geladen …</div>
+}
+
+@if (results$ | async; as results) {
+  <ul>
+    @for (book of results; track book.isbn) {
+      <li>{{ book.title }}</li>
+    }
+  </ul>
+}
+
+<!--
+@for (book of results$ | async; track book.isbn) {
+  <li>{{ book.title }}</li>
+}
+-->
